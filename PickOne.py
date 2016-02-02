@@ -1,23 +1,28 @@
 #!/usr/bin/python
 import numpy
 import scipy
-import datetime
+from datetime import datetime
 import Config
+import Data
+import Analyzer
+import Hurst
 
 def main():
-  tickers = readTickerFile(Config.TickerFilePath)
+  tickers = Data.readTickerFile(Config.TickerFilePath)
+  year, month, day = map(int, Config.TimeBegin.split('-'))
+  tsBeg = datetime(year, month, day)
+  year, month, day = map(int, Config.TimeEnd.split('-'))
+  tsEnd = datetime(year, month, day)
   for t in tickers:
-    ts = getStockPrice(t, Config.TimeBegin, Config.TimeEnd)
-    res = analyzer(ts)
+    ts = Data.getStockPrices(t, tsBeg, tsEnd)
+    ts = ts['Adj Close']
+    res = Analyzer.adfullerTest(ts)
+    print t + ' Ad Fuller Test = ' 
+    print res
+
+    res = Hurst.hurst(ts)
+    print t + ' Hurst = %f' %res
   return 0
 
-def readTickerFile(filepath):
-  lst = []
-  with open(filepath, 'r') as f:
-    for line in f:
-      line = line.rstrip()
-      if line[0] == '#':
-        continue
-      lst.append(line)
-
-  return lst
+if __name__ == '__main__':
+  main()
