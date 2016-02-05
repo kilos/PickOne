@@ -1,6 +1,5 @@
 #!/usr/bin/python
-import numpy
-import scipy
+
 from datetime import datetime
 import Config
 import Data
@@ -16,9 +15,9 @@ def main():
   for t in tickers:
     ts = Data.getStockPrices(t, tsBeg, tsEnd)
     ts = ts['Adj Close']
-    res = Analyzer.adfullerTest(ts)
-    print t + ' Ad Fuller Test = ' 
-    print res
+    #res = Analyzer.adfullerTest(ts)
+    #print t + ' Ad Fuller Test = ' 
+    #print res
 
     res = Hurst.hurst(ts)
     print t + ' Hurst = %f' %res

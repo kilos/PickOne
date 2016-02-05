@@ -2,18 +2,20 @@ from numpy import cumsum, log, polyfit, sqrt, std, subtract, var
 from numpy.random import randn
 
 def hurst(ts):
-	"""Returns the Hurst Exponent of the time series vector ts"""
-	# Create the range of lag values
-	lags = range(2, min(len(ts)-1, 100))
+  """Returns the Hurst Exponent of the time series vector ts"""
+  # Create the range of lag values
+  lags = range(2, 60)
 
-	# Calculate the array of the variances of the lagged differences
-	tau = [var(subtract(ts[lag:], ts[:-lag])) for lag in lags]
+  t = ts
 
-	# Use a linear fit to estimate the Hurst Exponent
-	poly = polyfit(log(lags), log(tau), 1)
+  # Calculate the array of the variances of the lagged differences
+  tau = [var(subtract(t[lag:], t[:-lag])) for lag in lags]
 
-	# Return the Hurst exponent from the polyfit output
-	return poly[0]/2.0
+  # Use a linear fit to estimate the Hurst Exponent
+  poly = polyfit(log(lags), log(tau), 1)
+
+  # Return the Hurst exponent from the polyfit output
+  return poly[0]/2.0
 
 # Create a Gometric Brownian Motion, Mean-Reverting and Trending Series
 #gbm = log(cumsum(randn(100000))+1000)
